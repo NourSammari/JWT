@@ -6,7 +6,9 @@ import(
 )
 
 func CheckUserType(c *gin.Context,role string)(err error){
+	console.log("Role: " ,role)
 	userType := c.GetString("user_type")
+	console.log("UserType: ",userType)
 	err = nil
 	if userType != role {
 		err = errors.New("Unauthorized to access this resource")
