@@ -30,6 +30,8 @@ func CheckUserType(c *gin.Context,role string)(err error){
 
 func MatchUserTypeToUid(c *gin.Context, userId string) error {
 	// Query the database to check if there is a user with the given userId and user type 'user'
+	fmt.Sprintf("userId : ",userId)
+
 	var count int
 	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE user_id = $1 AND user_type = 'ADMIN'", userId).Scan(&count)
 	if err != nil {
