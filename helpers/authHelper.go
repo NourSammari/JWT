@@ -6,9 +6,7 @@ import(
 )
 
 func CheckUserType(c *gin.Context,role string)(err error){
-	console.log("Role: " ,role)
 	userType := c.GetString("user_type")
-	console.log("UserType: ",userType)
 	err = nil
 	if userType != role {
 		err = errors.New("Unauthorized to access this resource")
@@ -17,7 +15,7 @@ func CheckUserType(c *gin.Context,role string)(err error){
 	return err
 }
 
-func MatchUserTypeToUid(c *gin.Context,userId string)(err error){
+/* func MatchUserTypeToUid(c *gin.Context,userId string)(err error){
 	userType := c.GetString("user_type")
 	uid := c.GetString("uid")
 	err = nil
@@ -28,4 +26,21 @@ func MatchUserTypeToUid(c *gin.Context,userId string)(err error){
 	}
 	err = CheckUserType(c, userType)
 	return err
+} */
+
+func MatchUserTypeToUid(c *gin.Context, userId string) error {
+	// Query the database to check if there is a user with the given userId and user type 'user'
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE user_id = $1 AND user_type = 'USER'", userId).Scan(&count)
+	if err != nil {
+		return err // Return the error if any error occurred during the query
+	}
+
+	// If count is 0, it means there is no such user with the given userId and user type 'user'
+	if count == 0 {
+		return errors.New("user not found or user type mismatch") // Return an error indicating the mismatch
+	}
+
+	return nil // Return nil if the user with the given userId and user type 'user' is found
 }
+
